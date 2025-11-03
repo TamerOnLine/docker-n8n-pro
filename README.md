@@ -1,31 +1,57 @@
-# docker-n8n-pro — Self-Hosted n8n (TLS, Traefik, Backups)
+# 🚀 Project Setup with Docker & Traefik
 
-## 🚀 Quick Start (Production with Domain)
+هذا المشروع يوفّر بيئة جاهزة للعمل باستخدام **Docker Compose** مع دعم التشغيل في وضع التطوير والإنتاج، بالإضافة إلى إعداد **Traefik + HTTPS** للإستضافة الآمنة.
 
-```bash
-git clone <your_repo_url> docker-n8n-pro
-cd docker-n8n-pro
-bash bin/init.sh              # Prepares .env and folders
-docker compose up -d          # Launches Traefik + DB + n8n
+## 📂 هيكل المشروع
+
 ```
-- Wait ~1 minute for SSL certificates.
-- Open: `https://YOUR_DOMAIN`
+project/
+├─ docker-compose.yml               # الإعداد الأساسي المشترك
+├─ docker-compose.override.yml      # إعدادات التطوير (Dev)
+├─ docker-compose.prod.yml          # إعدادات الإنتاج (Prod) مع Traefik + TLS
+├─ .env.example                     # قيم افتراضية للتطوير
+├─ .env.prod.example                # قيم سرّية للإنتاج
+├─ data/                            # بيانات التخزين
+└─ backups/                         # النسخ الاحتياطي
+```
 
-## 🧪 Local Development (No Domain / No SSL)
+## 🧑‍💻 التشغيل في وضع التطوير (Local)
 
 ```bash
 cp .env.example .env
-docker compose -f docker-compose.yml -f docker-compose.override.yml up -d
-# Visit http://localhost:5678
+docker compose up -d
 ```
 
-## 💾 Backups
+> 🔥 يبدأ التشغيل بدون HTTPS، مناسب للتطوير المحلي والتجارب.
+
+## 🏢 التشغيل في بيئة الإنتاج (Production)
 
 ```bash
-bash bin/backup.sh
-bash bin/restore.sh backups/db-*.sql backups/n8n-*.tgz
+cp .env.prod.example .env
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 ```
 
-## 📁 Templates
+مميزات وضع الإنتاج:
 
-Import automation templates from: `templates/flows/*.json` inside n8n.
+✅ HTTPS عبر Traefik + Let’s Encrypt  
+✅ توجيه الدومين تلقائيًا  
+✅ Logs وتنظيم الخدمات  
+
+## 🧱 المتطلبات الأساسية
+
+- Docker 26+
+- Docker Compose v2+
+- نطاق (Domain) عند استخدام وضع الإنتاج
+
+## 🛠 التخصيص
+
+- عدّل المنافذ، الدومينات، المتغيرات في `.env`
+- أضف خدمات إضافية عبر `docker-compose.override.yml`
+
+## 📦 النسخ الاحتياطي
+
+أي ملفات أو بيانات مهمة يتم حفظها في مجلد: `backups/`
+
+---
+
+إذا وجدت هذا المشروع مفيدًا، لا تنس ⭐ على GitHub!
